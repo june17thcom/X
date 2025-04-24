@@ -1,0 +1,12 @@
+#DB
+env
+
+#node js
+node_modules/
+pakage-lock.json
+
+#macos
+.DS_store
+
+# .txt 파일 무시
+*.txt
