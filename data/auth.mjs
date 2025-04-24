@@ -54,6 +54,7 @@ export async function signUp(userid, password, name, email) {
     name,
     email,
     //url,
+    url: "https://randomuser.me/api/portraits/men/29.jpg",
   };
   if (users.find((user) => user.userid === userid)) {
     return false;

@@ -11,8 +11,8 @@ export async function getPost(req, res, next) {
 
 // id를 받아 하나의 포스트를 가져오는 함수
 export async function getPostById(req, res, next) {
-  const userid = req.params.id;
-  const data = await postRepository.getByid(id);
+  const id = req.params.id;
+  const post = await postRepository.getById(id);
   if (post) {
     res.status(200).json(post);
   } else {
@@ -25,7 +25,7 @@ export async function createPost(req, res, next) {
   const { userid, name, text } = req.body;
   const posts = await postRepository.create(userid, name, text);
   if (posts) {
-    res.status(200).json(posts);
+    res.status(201).json(posts);
   } else {
     res
       .status(404)
@@ -51,7 +51,5 @@ export async function updatePost(req, res, next) {
 export async function deletePost(req, res, next) {
   const id = req.params.id;
   await postRepository.remove(id);
-  if (post) {
-    res.sendStatus(204);
-  }
+  res.sendStatus(204);
 }

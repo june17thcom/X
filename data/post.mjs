@@ -1,3 +1,7 @@
+import express from "express";
+
+const router = express.Router();
+
 let posts = [
   {
     id: "1",
@@ -41,6 +45,48 @@ let posts = [
   },
 ];
 
-app.use(express.json());
+//모든 포스트를 리턴
+export async function getAll() {
+  return posts;
+}
 
-app.listen(8080);
+//사용자 아이디에 대한 포스트를 리턴
+//조건을 만족하는 모든 요소를 배열로 리턴턴
+export async function getAllByUserId(userid) {
+  return posts.filter((post) => post.userid === userid);
+}
+
+//글 번호에 대한 포스트를 리턴
+//조건을 만족하는 첫 요소 하나를 리턴
+export async function getById(id) {
+  return posts.find((post) => post.id === id);
+}
+
+// 포스트 작성
+export async function create(userid, name, text) {
+  const post = {
+    id: Date.now().toString,
+    userid, //요소명이 같으면 생략 가
+    name,
+    text,
+    createdAt: Date.now().toString,
+  };
+  posts = [post, ...posts];
+  return posts;
+}
+
+// 포스트 변경
+export async function update(id, text) {
+  const post = posts.find((post) => post.id === id);
+  if (post) {
+    post.text = text;
+  }
+  return post;
+}
+
+// 포스트 삭제
+export async function remove(id) {
+  posts = posts.filter((post) => post.id !== id);
+}
+
+export default router;
