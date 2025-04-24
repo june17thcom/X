@@ -75,10 +75,28 @@ export async function login(userid, password) {
   return user;
 }
 
-// 로그인 유지
+// 유저 아이디 확인
 export async function userCheck(userid) {
-  users = users.filter((user) => user.userid === userid);
-  return true;
+  const user = users.find((user) => user.userid === userid);
+  if (user) {
+    //userid;
+    //return userid;
+    return true;
+  } else {
+    return false;
+  }
 }
+/*
+//로그아웃
+export async function logout(userid) {
+  const user = users.find((user) => user.userid === userid);
+  if (user) {
+    //userid;
+    //return userid;
+    return true;
+  } else {
+    return false;
+  }
+}*/
 
 export default router;

@@ -15,5 +15,11 @@ router.post("/signup", authController.signUp);
 router.post("/login", authController.login);
 
 // 로그인 유지
+// http://127.0.0.1:8080/auth/me
+router.get("/me", authController.userCheck);
+
+//로그아웃
+// http://127.0.0.1:8080/auth/logout
+router.get("/logout", authController.logout);
 
 export default router;

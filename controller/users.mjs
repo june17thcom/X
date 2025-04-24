@@ -11,6 +11,7 @@ export async function login(req, res, next) {
   const { userid, password } = req.body;
   const user = await authRepository.login(userid, password);
   if (user) {
+    req.session.user = { userid };
     res.status(200).json(`${userid}님 로그인 완료`);
   } else {
     res.status(400).json(`${userid}님 로그인이 실패되셨습니다.`);
@@ -24,14 +25,34 @@ export async function login(req, res, next) {
 }
 
 // 로그인 유지: 받아온 정보가 일치할 시에만
-// id를 받아 하나의 포스트를 가져오는 함수
+//
 export async function userCheck(req, res, next) {
-  const id = req.params.id;
-  const data = await authRepository.userCheck(userid);
+  //const userid = req.params.userid;
+  const data = await req.session.user;
   if (data) {
-    res.status(200).json(data);
+    res.status(200).json(req.session.user);
   } else {
-    res.status(404).json({ message: `${id}와 일치하는 회원정보가 없습니다.` });
+    res.status(401).send("로그인이 필요합니다.");
+  }
+} /*else {
+    res
+      .status(404)
+      .json({ message: `${userid}와 일치하는 회원정보가 없습니다.` });
+  }*/
+
+// 로그아웃
+// 세션에 저장된 유저 정보를 삭제하는 함수
+export async function logout(req, res, next) {
+  const user = req.session.user; //req.params.userid;
+  //const data = await authRepository.userCheck(userid);
+  if (user) {
+    req.session.destroy(() => {
+      res.sendStatus(205); //.json({ message: `로그아웃 되셨습니다.` });
+    });
+  } else {
+    res.status(404).json({
+      message: `현재 로그인 돼 있지 않습니다.`,
+    });
   }
 }
 
