@@ -1,14 +1,9 @@
-#DB
+# DB
 .env
 
-#node js
+# node.js
 node_modules/
-pakage-lock.json
+package-lock.json
 
-#macos
-.DS_store
-
-# .txt 파일 무시
-*.txt
-
-config.mjs
+# MACOS
+.DS_Store

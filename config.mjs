@@ -2,10 +2,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-function require(key, defaultValue = undefined) {
-  const value = process.env(key) || defaultValue;
+function required(key, defaultValue = undefined) {
+  const value = process.env[key] || defaultValue;
   if (value == null) {
-    throw new Error(`키 ${key}는 undefined`);
+    throw new Error(`키 ${key}는 undefined!!`);
   }
   return value;
 }

@@ -1,7 +1,3 @@
-import express from "express";
-
-const router = express.Router();
-
 let users = [
   {
     id: "1",
@@ -45,58 +41,30 @@ let users = [
   },
 ];
 
-// 회원 가입: 회원 정보 작성
-export async function signUp(userid, password, name, email) {
+export async function createUser(userid, password, name, email) {
   const user = {
     id: Date.now().toString(),
     userid,
     password,
     name,
     email,
-    //url,
     url: "https://randomuser.me/api/portraits/men/29.jpg",
   };
-  if (users.find((user) => user.userid === userid)) {
-    return false;
-  } else {
-    users = [user, ...users];
-    return users;
-  }
+  users = [user, ...users];
+  return users;
 }
 
-// 로그인
 export async function login(userid, password) {
   const user = users.find(
     (user) => user.userid === userid && user.password === password
   );
-  if (user) {
-    userid, password;
-  }
   return user;
 }
 
-// 유저 아이디 확인
-export async function userCheck(userid) {
-  const user = users.find((user) => user.userid === userid);
-  if (user) {
-    //userid;
-    //return userid;
-    return true;
-  } else {
-    return false;
-  }
+export async function findByUserid(userid) {
+  return users.find((user) => user.userid === userid);
 }
-/*
-//로그아웃
-export async function logout(userid) {
-  const user = users.find((user) => user.userid === userid);
-  if (user) {
-    //userid;
-    //return userid;
-    return true;
-  } else {
-    return false;
-  }
-}*/
 
-export default router;
+export async function findByid(id) {
+  return users.find((user) => user.id === id);
+}
