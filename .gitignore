@@ -1,5 +1,5 @@
 #DB
-env
+.env
 
 #node js
 node_modules/
@@ -10,3 +10,5 @@ pakage-lock.json
 
 # .txt 파일 무시
 *.txt
+
+config.mjs

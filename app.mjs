@@ -4,6 +4,8 @@ import session from "express-session";
 import postsRouter from "./router/posts.mjs";
 import authRouter from "./router/auth.mjs";
 
+import { config } from "dotenv";
+
 const app = express();
 app.use(express.json());
 
@@ -33,3 +35,5 @@ app.use((req, res, next) => {
 app.listen(8080, () => {
   console.log("로그인/게시판 서버 실행 중");
 });
+
+app.listen(config.host.port);

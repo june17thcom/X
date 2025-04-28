@@ -45,6 +45,8 @@ let posts = [
   },
 ];
 
+//postRepository
+
 //모든 포스트를 리턴
 export async function getAll() {
   return posts;
