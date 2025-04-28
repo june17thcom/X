@@ -6,7 +6,7 @@ let users = [
   {
     id: "1",
     userid: "apple",
-    password: "1111",
+    password: "11111111",
     name: "김사과",
     email: "apple@apple.com",
     url: "https://randomuser.me/api/portraits/women/32.jpg",
@@ -98,5 +98,14 @@ export async function logout(userid) {
     return false;
   }
 }*/
+
+export async function findByUserid(userid) {
+  const user = users.find((user) => user.userid === userid);
+  return user;
+}
+
+export async function findByid(id) {
+  return users.find((user) => user.id === id);
+}
 
 export default router;
