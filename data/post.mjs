@@ -65,11 +65,11 @@ export async function getById(id) {
 // 포스트 작성
 export async function create(userid, name, text) {
   const post = {
-    id: Date.now().toString,
+    id: Date.now().toString(),
     userid, //요소명이 같으면 생략 가
     name,
     text,
-    createdAt: Date.now().toString,
+    createdAt: Date.now().toString(),
   };
   posts = [post, ...posts];
   return posts;

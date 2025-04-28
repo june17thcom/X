@@ -27,9 +27,7 @@ export async function createPost(req, res, next) {
   if (posts) {
     res.status(201).json(posts);
   } else {
-    res
-      .status(404)
-      .json({ message: `${id}의 포스트를 생성하는 데 실패했습니다.` });
+    res.status(404).json({ message: `포스트를 생성하는 데 실패했습니다.` });
   }
 }
 
