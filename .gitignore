@@ -7,3 +7,11 @@ package-lock.json
 
 # MACOS
 .DS_Store
+
+JWT_
+
+DB_PORT = 
+DB_PASSWORD = 
+DB_HOST = 
+DB_USER = ADMIN
+DB_DATABASE = 

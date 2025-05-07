@@ -2,6 +2,7 @@ import express from "express";
 import postsRouter from "./router/posts.mjs";
 import authRouter from "./router/auth.mjs";
 import { config } from "./config.mjs";
+import { db } from "./db/database.mjs";
 
 const app = express();
 
@@ -16,4 +17,6 @@ app.use((req, res, next) => {
 
 console.log("서버 시작");
 
+app.listen(config.host.port);
+db.getConnection().then((connection) => console.log(connection));
 app.listen(config.host.port);
