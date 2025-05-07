@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>회원가입</title>
+  </head>
+  <body>
+    <h2>회원가입</h2>
+    <p>
+      아이디:
+      <input type="text" name="userid" id="userid" placeholder="아이디 입력" />
+    </p>
+    <p>
+      비밀번호:
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="비밀번호 입력"
+      />
+    </p>
+    <p>
+      이름:
+      <input type="text" name="name" id="name" placeholder="이름 입력" />
+    </p>
+    <p>
+      이메일:
+      <input type="email" name="email" id="email" placeholder="이메일 입력" />
+    </p>
+    <p><button id="sign_btn">로그인</button></p>
+
+    <script>
+      const btn = document.getElementById("sign_btn");
+      btn.addEventListener("click", () => {
+        const userid = document.getElementById("userid").value;
+        const password = document.getElementById("password").value;
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        if (userid && password && email && name) {
+          fetch(`http://127.0.0.1:8080/auth/signup`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userid: userid,
+              password: password,
+              name: name,
+              email: email,
+            }),
+          })
+            .then((res) => {
+              if (!res.ok) {
+                alert("회원가입 실패" + res.message);
+              } else {
+                return res.json().then((data) => {
+                  console.log("서버 응답: " + data);
+
+                  //if (data.success) {
+                  prompt(
+                    "회원가입이 완료되셨습니다. 로그인 화면으로 전환됩니다."
+                  );
+                  location.href = "http://127.0.0.1:8080/auth/login";
+                  //}
+                });
+              }
+            })
+            .catch((err) => {
+              console.log("에러 발생! ", err);
+              alert("서버와 통신 중 문제가 발생했습니다.");
+            });
+        } else {
+          alert("모든 항목을 공백 없이 다 입력해 주십시오.");
+        }
+      });
+    </script>
+  </body>
+</html>

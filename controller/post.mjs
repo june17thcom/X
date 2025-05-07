@@ -1,16 +1,16 @@
 import * as postRepository from "../data/post.mjs";
 
-//모든 포스트 / 해당 아이디에 대한 포스트를 가져오는 함수
-export async function getPost(req, res, next) {
+// 모든 포스트 / 해당 아이디에 대한 포스트를 가져오는 함수
+export async function getPosts(req, res, next) {
   const userid = req.query.userid;
   const data = await (userid
-    ? postRepository.getAllByUserId(userid) // O
-    : postRepository.getAll()); // X
+    ? postRepository.getAllByUserid(userid)
+    : postRepository.getAll());
   res.status(200).json(data);
 }
 
 // id를 받아 하나의 포스트를 가져오는 함수
-export async function getPostById(req, res, next) {
+export async function getPost(req, res, next) {
   const id = req.params.id;
   const post = await postRepository.getById(id);
   if (post) {
@@ -24,14 +24,10 @@ export async function getPostById(req, res, next) {
 export async function createPost(req, res, next) {
   const { userid, name, text } = req.body;
   const posts = await postRepository.create(userid, name, text);
-  if (posts) {
-    res.status(201).json(posts);
-  } else {
-    res.status(404).json({ message: `포스트를 생성하는 데 실패했습니다.` });
-  }
+  res.status(201).json(posts);
 }
 
-//포스트를 변경하는 함수
+// 포스트를 변경하는 함수
 export async function updatePost(req, res, next) {
   const id = req.params.id;
   const text = req.body.text;
@@ -39,13 +35,11 @@ export async function updatePost(req, res, next) {
   if (post) {
     res.status(201).json(post);
   } else {
-    res
-      .status(404)
-      .json({ message: `${id}의 포스트를 변경하는 데 실패했습니다.` });
+    res.status(404).json({ message: `${id}의 포스트가 없습니다.` });
   }
 }
 
-//포스트를 삭제하는 함수
+// 포스트를 삭제하는 함수
 export async function deletePost(req, res, next) {
   const id = req.params.id;
   await postRepository.remove(id);

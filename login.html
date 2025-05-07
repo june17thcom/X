@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>로그인</title>
+  </head>
+  <body>
+    <h2>로그인</h2>
+    <label for="userid">아이디: </label>
+    <input type="text" id="userid" placeholder="아이디 입력" />
+    <br />
+    <label for="password">비밀번호: </label>
+    <input type="password" id="password" placeholder="비밀번호 입력" />
+    <br />
+    <button id="login_btn">로그인</button>
+
+    <script>
+      const btn = document.getElementById("login_btn");
+      btn.addEventListener("click", async () => {
+        const userid = document.getElementById("userid").value;
+        const password = document.getElementById("password").value;
+        if (!userid || !password) {
+          alert("아이디와 비밀번호를 입력하세요.");
+          return;
+        }
+        try {
+          fetch("http://127.0.0.1:8080/auth/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userid,
+              password,
+            }),
+          })
+            .then((res) => {
+              if (!res.ok) {
+                return res.text().then((text) => {
+                  let msg = "서버 오류";
+                  try {
+                    const error = JSON.parse(text);
+                    msg = error.message || msg;
+                  } catch {
+                    msg = text || msg;
+                  }
+                  throw new Error(msg);
+                });
+              }
+              const data = res.json();
+              return data;
+            })
+            .then((data) => {
+              console.log("로그인 성공:", data.token);
+              localStorage.setItem("token", data.token);
+              window.location.href = "post.html";
+            })
+            .catch((err) => {
+              console.error("인증 오류 발생!", err);
+              alert("로그인 실패: " + err.message);
+            });
+        } catch {
+          console.error("전송 실패!", err);
+          alert("로그인 실패: " + err.message);
+        }
+      });
+    </script>
+  </body>
+</html>

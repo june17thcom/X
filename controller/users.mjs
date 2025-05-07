@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 const secretKey = "abcdefg1234%^&*";
 const bcryptSaltRounds = 10;
-const jwtExpiresInDays = "2h";
+const jwtExpiresInDays = "4d";
 
 async function createJwtToken(id) {
   return jwt.sign({ id }, secretKey, { expiresIn: jwtExpiresInDays });
@@ -14,10 +14,6 @@ async function createJwtToken(id) {
 //로그인
 //모든 포스트 / 해당 아이디에 대한 포스트를 가져오는 함수
 export async function login(req, res, next) {
-  /*
-  const userid = req.query.userid;
-  const password = req.query.password;
-  */
   const { userid, password } = req.body;
   //const user = await authRepository.login(userid, password);
   const user = await authRepository.findByUserid(userid);
@@ -29,17 +25,10 @@ export async function login(req, res, next) {
     return res.status(401).json({ message: "비밀번호를 확인해주세요!" });
   }
   const token = await createJwtToken(user.id);
-  res.status(200).json({ token, userid });
+  return res.status(200).json({ token, userid });
 }
 
-/*
-    ? postRepository.login(userid) && postRepository.login(password) // O
-    : res.status(500).json(data)); // X
-    */
-//res.status(200).json(data);
-
 // 로그인 유지: 받아온 정보가 일치할 시에만
-//
 export async function userCheck(req, res, next) {
   //const userid = req.params.userid;
   const data = await req.session.user;
@@ -48,17 +37,12 @@ export async function userCheck(req, res, next) {
   } else {
     res.status(401).send("로그인이 필요합니다.");
   }
-} /*else {
-    res
-      .status(404)
-      .json({ message: `${userid}와 일치하는 회원정보가 없습니다.` });
-  }*/
+}
 
 // 로그아웃
 // 세션에 저장된 유저 정보를 삭제하는 함수
 export async function logout(req, res, next) {
-  const user = req.session.user; //req.params.userid;
-  //const data = await authRepository.userCheck(userid);
+  const user = req.session.user;
   if (user) {
     req.session.destroy(() => {
       res.sendStatus(205); //.json({ message: `로그아웃 되셨습니다.` });

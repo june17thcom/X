@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>게시글 목록</title>
+  </head>
+  <body>
+    <h2>게시글 목록</h2>
+    <ul id="post-list"></ul>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", async () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("로그인이 필요합니다.");
+          window.location.href = "login.html";
+          return;
+        }
+
+        try {
+          const res = await fetch("http://127.0.0.1:8080/posts", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.message || "포스트 불러오기 실패");
+          }
+
+          const list = document.getElementById("post-list");
+          list.innerHTML = data
+            .map(
+              (post) => `<li><strong>${post.title}</strong>: ${post.body}</li>`
+            )
+            .join("");
+        } catch (err) {
+          alert("에러 발생: " + err.message);
+          console.error(err);
+        }
+      });
+    </script>
+  </body>
+</html>
