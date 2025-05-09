@@ -1,4 +1,5 @@
 import * as postRepository from "../data/post.mjs";
+import { db } from "../db/database.mjs";
 
 // 모든 포스트 / 해당 아이디에 대한 포스트를 가져오는 함수
 export async function getPosts(req, res, next) {
@@ -11,8 +12,8 @@ export async function getPosts(req, res, next) {
 
 // id를 받아 하나의 포스트를 가져오는 함수
 export async function getPost(req, res, next) {
-  const id = req.params.id;
-  const post = await postRepository.getById(id);
+  const idx = req.params.id;
+  const post = await postRepository.getById(idx);
   if (post) {
     res.status(200).json(post);
   } else {
@@ -22,8 +23,9 @@ export async function getPost(req, res, next) {
 
 // 포스트를 생성하는 함수
 export async function createPost(req, res, next) {
-  const { userid, name, text } = req.body;
-  const posts = await postRepository.create(userid, name, text);
+  const { text } = req.body; //
+  console.log("req.useridx: ", req.useridx);
+  const posts = await postRepository.create(text, req.useridx);
   res.status(201).json(posts);
 }
 
@@ -41,7 +43,14 @@ export async function updatePost(req, res, next) {
 
 // 포스트를 삭제하는 함수
 export async function deletePost(req, res, next) {
-  const id = req.params.id;
-  await postRepository.remove(id);
+  const idx = req.params.id;
+  const post = await postRepository.getById(idx);
+  if (!post) {
+    return res.status(404).json({ message: `${idx}의 포스트가 없습니다` });
+  }
+  if (post.useridx !== req.useridx) {
+    return res.sendStatus(403);
+  }
+  await postRepository.remove(idx);
   res.sendStatus(204);
 }

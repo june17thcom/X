@@ -1,3 +1,9 @@
+import { db } from "../db/database.mjs";
+const SELECT_JOIN =
+  "select u.userid, u.name, u.url, p.idx, p.useridx, p.text, p.crateAt from users as u join posts as p on u.idx = p.useridx ";
+
+const ORDER_DESC = "order by p.crateAt desc";
+/*
 let posts = [
   {
     id: "1",
@@ -40,27 +46,39 @@ let posts = [
     url: "https://randomuser.me/api/portraits/men/29.jpg",
   },
 ];
+*/
 
 // 모든 포스트를 리턴
 export async function getAll() {
-  return posts;
+  return db.execute(`${SELECT_JOLN} ${ORDER_DESC}`).then((result) => result[0]);
 }
 
 // 사용자 아이디(userid)에 대한 포스트를 리턴
 // 조건을 만족하는 모든 요소를 배열로 리턴
 export async function getAllByUserid(userid) {
-  return posts.filter((post) => post.userid === userid);
+  return db
+    .execute(`${SELECT_JOIN} where u.userid = ? ${ORDER_DESC} `, [userid])
+    .then((result) => result[0]);
 }
 
 // 글 번호(id)에 대한 포스트를 리턴
 // 조건을 만족하는 첫 번째 요소 하나를 리턴
-export async function getById(id) {
-  return posts.find((post) => post.id === id);
+export async function getById(idx) {
+  //getById라고 돼 있지만 idx로 굴러감
+  return db
+    .execute(`${SELECT_JOIN} where p.idx=?`, [idx])
+    .then((result) => result[0][0]); //posts.find((post) => post.id === id);
 }
 
 // 포스트 작성
-export async function create(userid, name, text) {
-  const post = {
+export async function create(text, useridx) {
+  return db
+    .execute(" insert into posts (useridx, text) values (?, ?)", [
+      useridx,
+      text,
+    ])
+    .then((result) => result[0].insertId);
+  /*const post = {
     id: Date.now().toString(),
     userid,
     name,
@@ -68,19 +86,24 @@ export async function create(userid, name, text) {
     createdAt: Date.now().toString(),
   };
   posts = [post, ...posts];
-  return posts;
+  return posts;*/
 }
 
 // 포스트 변경
-export async function update(id, text) {
+export async function update(idx, text) {
+  return db
+    .execute("update posts set text=? where idx=?", [text, idx])
+    .then(() => getById(idx));
+  /*
   const post = posts.find((post) => post.id === id);
   if (post) {
     post.text = text;
   }
-  return post;
+  return post;*/
 }
 
 // 포스트 삭제
-export async function remove(id) {
-  posts = posts.filter((post) => post.id !== id);
+export async function remove(idx) {
+  return db.execute("delete from posts where idx=?", [idx]);
+  //.then(() => getById());
 }
