@@ -28,7 +28,7 @@ export const isAuth = async (req, res, next) => {
     }
     console.log("user.id: ", user.id);
     console.log("user.userid: ", user.userid);
-    req.userid = user.userid;
+    req.id = user.id; //리퀘 아이디=옵젝 아이디
     next();
   });
 };

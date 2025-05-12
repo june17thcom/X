@@ -1,70 +1,31 @@
-let users = [
-  {
-    id: "1",
-    userid: "apple",
-    password: "1111",
-    name: "김사과",
-    email: "apple@apple.com",
-    url: "https://randomuser.me/api/portraits/women/32.jpg",
-  },
-  {
-    id: "2",
-    userid: "banana",
-    password: "2222",
-    name: "반하나",
-    email: "banana@banana.com",
-    url: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
-    id: "3",
-    userid: "orange",
-    password: "3333",
-    name: "오렌지",
-    email: "orange@orange.com",
-    url: "https://randomuser.me/api/portraits/men/11.jpg",
-  },
-  {
-    id: "4",
-    userid: "berry",
-    password: "4444",
-    name: "배애리",
-    email: "orange@orange.com",
-    url: "https://randomuser.me/api/portraits/women/52.jpg",
-  },
-  {
-    id: "5",
-    userid: "melon",
-    password: "5555",
-    name: "이메론",
-    email: "orange@orange.com",
-    url: "https://randomuser.me/api/portraits/men/29.jpg",
-  },
-];
+//import mongoose from "mongoose";
+import Mongoose from "mongoose";
+import { useVirtualId } from "../db/database.mjs";
 
-export async function createUser(userid, password, name, email) {
-  const user = {
-    id: Date.now().toString(),
-    userid,
-    password,
-    name,
-    email,
-    url: "https://randomuser.me/api/portraits/men/29.jpg",
-  };
-  users = [user, ...users];
-  return users;
-}
+const userSchema = new Mongoose.Schema(
+  {
+    userid: { type: String, require: true },
+    name: { type: String, require: true },
+    email: { type: String, require: true },
+    password: { type: String, require: true },
+    url: String,
+  },
+  { versionKey: false }
+  // 일종의 백그라운드로 들어가는, 데이터의 버전을 알려주는 값. 관리엔 용이하겠지만 현재로선 불요하기에 스킵
+);
 
-export async function login(userid, password) {
-  const user = users.find(
-    (user) => user.userid === userid && user.password === password
-  );
-  return user;
+useVirtualId(userSchema);
+const User = Mongoose.model("User", userSchema); //데이터명은 기본이 단수여야 데이터명은 복수 s가 붙음
+
+export async function createUser(user) {
+  return new User(user).save().then((data) => data.id);
 }
 
 export async function findByUserid(userid) {
-  return users.find((user) => user.userid === userid);
+  return User.findOne({ userid });
 }
 
+//아이디를 바탕으로 옵젝 아이디를 새로 생성
 export async function findByid(id) {
-  return users.find((user) => user.id === id);
+  return User.findById(id);
 }

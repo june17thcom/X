@@ -33,6 +33,4 @@ router.post("/signup", validateSignup, authController.signup);
 // http://127.0.0.1:8080/auth/login
 router.post("/login", validateLogin, authController.login);
 
-// 로그인 유지
-
 export default router;
