@@ -2,7 +2,6 @@ import * as authRepository from "../data/auth.mjs";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { config } from "../config.mjs";
-import { getUsers } from "../db/database.mjs";
 
 const secretKey = config.jwt.secretKey;
 const bcryptSaltRounds = config.bcrypt.saltRounds;

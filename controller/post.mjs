@@ -1,4 +1,5 @@
 import * as postRepository from "../data/post.mjs";
+import mongoose from "mongoose";
 
 // 모든 포스트 / 해당 아이디에 대한 포스트를 가져오는 함수
 export async function getPosts(req, res, next) {
@@ -36,8 +37,8 @@ export async function updatePost(req, res, next) {
   if (!post) {
     return res.status(404).json({ message: `포스트가 없습니다.` });
   }
-  if (post.useridx !== req.id) {
-    return res.sendStatus(4403);
+  if (post.userId !== req.id) {
+    return res.sendStatus(403);
   }
   await postRepository.remove();
   const updated = await postRepository.update(id, text);
